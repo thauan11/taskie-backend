@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./dist"
+  }
+}
+// {
+//   "compilerOptions": {
+//     "target": "es2020", // ou "esnext"
+//     "module": "commonjs", // ou "esnext" ou "node16" ou "nodenext"
+//     "moduleResolution": "node", // ou "node16" ou "nodenext"
+//     "esModuleInterop": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "strict": true,
+//     "skipLibCheck": true,
+//     "outDir": "./dist", //Pasta de saida
+//     "baseUrl": "./src", //Pasta raiz dos arquivos
+//     "paths": {
+//       "*": ["./*"]
+//     }
+//   }
+// }
