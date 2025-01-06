@@ -18,7 +18,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/users', authenticateToken, userRoutes);
+// app.use('/users', authenticateToken, userRoutes);
+app.use('/users', userRoutes);
 app.use('/sing-in', loginRoutes);
 app.use('/sing-up', registerRoutes);
 

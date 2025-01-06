@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required.'),
   description: z.string().min(1, 'Description is required.'),
+  collectionId: z.number().min(1, 'Collection is required.'),
   // endAt: z.string().min(1, 'End date is required.'),
   endAt: z.string().optional(),
   completed: z.boolean().optional(),
@@ -27,6 +28,34 @@ export const validateUserId = async (
 
     if (!userInDatabase) {
       res.status(404).json({ error: 'User not found' });
+      return
+    }
+
+    next();
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.issues });
+      return
+    }
+
+    next(error);
+  }
+}
+
+export const validateCollectionId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { collectionId } = req.params;
+
+    const collectionInDb = await prisma.collection.findUnique({
+      where: { id: Number(collectionId) },
+    });
+
+    if (!collectionInDb) {
+      res.status(404).json({ error: 'Collection not found' });
       return
     }
 

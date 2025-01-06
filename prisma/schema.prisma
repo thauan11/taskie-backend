@@ -14,24 +14,35 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid()) @db.Uuid
-  email     String  @unique
-  name      String
-  password  String
-  Task      Task[]
+  id          String  @id @default(uuid()) @db.Uuid
+  email       String  @unique
+  name        String
+  password    String
+  Collection  Collection[]
+  Task        Task[]
+}
+
+model Collection {
+  id      Int     @id @default(autoincrement())
+  name    String 
+  icon    String 
+  userId  String  @db.Uuid
+  user    User    @relation(fields: [userId], references: [id])
+  Task    Task[]
 }
 
 model Task {
-  id          String    @id @default(uuid()) @db.Uuid
-  title       String
-  description String
-  createdAt   DateTime  @default(now())
-  endAt       DateTime?
-  completed   Boolean   @default(false)
-  deleted     Boolean   @default(false)
-  collection  String
-  userId      String    @db.Uuid
-  user        User      @relation(fields: [userId], references: [id])
-
+  id            String      @id @default(uuid()) @db.Uuid
+  title         String
+  description   String
+  createdAt     DateTime    @default(now())
+  endAt         DateTime?
+  completed     Boolean     @default(false)
+  deleted       Boolean     @default(false)
+  collectionId  Int         
+  collection    Collection  @relation(fields: [collectionId], references: [id])
+  // collection  String
+  userId        String      @db.Uuid
+  user          User        @relation(fields: [userId], references: [id])
   // @@unique([collection, userId])
 }
