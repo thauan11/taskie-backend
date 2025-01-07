@@ -61,58 +61,13 @@ export const getSpecificTask = async (req: Request, res: Response) => {
   }
 };
 
-export const getCollection = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-
-    const collections = await prisma.collection.findMany({
-      where: { userId },
-    });
-
-    if (collections.length <= 0) {
-      res.status(204).json({ message: 'No collections found' });
-    } else {
-      res.status(200).json(collections);
-    }
-  } catch (error) {
-    console.error('Error listing collections:', error);
-    res.status(500).json({ error: 'Failed to list collections' });
-  }
-};
-
-export const createCollection = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const { 
-      name,
-      icon,
-    } = req.body;
-
-    const collection = await prisma.collection.create({
-      data: {
-        name,
-        icon,
-        userId,
-      },
-    });
-
-    res.status(201).json({ message: "Collection created successfully", collection: collection });
-  } catch (error) {
-    console.error("Error creating a collection:", error);
-
-    res
-      .status(500)
-      .json({ error: "An error occurred while creating a collection." });
-  }
-};
-
 export const createTask = async (req: Request, res: Response) => {
   try {
     const { userId, collectionId } = req.params;
     const { 
       title,
       description,
-      // endAt,
+      endAt,
       completed = false,
       deleted = false 
     } = req.body;
@@ -121,8 +76,7 @@ export const createTask = async (req: Request, res: Response) => {
       data: {
         title,
         description,
-        // collection,
-        // endAt: new Date(endAt),
+        endAt,
         completed,
         deleted,
         collectionId: Number(collectionId),
@@ -160,27 +114,3 @@ export const updateTask = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred while updating the task.' });
   }
 };
-
-// export const getCollections = async (req: Request, res: Response) => {
-//   try {
-//     const { userId } = req.params;
-
-//     const collections = await prisma.task.findMany({
-//       where: { userId },
-//       distinct: ['collection'],
-//       select: {
-//         collection: true,
-//       },
-//     });
-
-//     if (collections.length === 0) {
-//       res.status(404).json({ message: 'No collections found' });
-//       return
-//     }
-
-//     res.status(200).json(collections.map((task) => task.collection));
-//   } catch (error) {
-//     console.error('Error fetching collections:', error);
-//     res.status(500).json({ error: 'Failed to fetch collections' });
-//   }
-// };

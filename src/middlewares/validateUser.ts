@@ -9,12 +9,13 @@ const passwordSchema = z.string()
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter');
 
 const userSchema = z.object({
-  name: z.string().min(1, 'Name is required.'),
+  name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email format'),
-  password: passwordSchema,
+  // password: passwordSchema,
+  password: z.string().min(1, 'Password is required'),
 })
 
-export const validateNewUser = (
+export const validateUser = (
   req: Request,
   res: Response,
   next: NextFunction

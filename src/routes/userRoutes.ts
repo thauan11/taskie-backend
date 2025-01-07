@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import { getUser } from '../controllers/userController';
-import { getAllTasks, getUserTasks, createTask, updateTask, getSpecificTask, getCollection, createCollection } from '../controllers/taskController';
+import { getUser, updateUser } from '../controllers/userController';
+import { getAllTasks, getUserTasks, createTask, updateTask, getSpecificTask } from '../controllers/taskController';
 import { validateUserId, validateTaskSchema, validateTaskId, validateCollectionId, validateCollection } from '../middlewares/validateTask';
+import { createCollection, getCollection } from '../controllers/collectionController';
+import { validateUser } from '../middlewares/validateUser';
 
 const router = Router();
 
 router.get('/', getUser);
+router.patch('/:userId', validateUser, updateUser);
 
 router.get('/tasks', getAllTasks);
 router.get('/:userId/tasks', validateUserId, getUserTasks);
@@ -13,6 +16,7 @@ router.get('/:userId/tasks/:taskId', validateUserId, validateTaskId, getSpecific
 
 router.get('/:userId/collections', validateUserId, getCollection);
 router.post('/:userId/collections', validateUserId, validateCollection, createCollection);
+router.patch('/:userId/collections/:collectionId', validateUserId, validateCollection, updateTask);
 
 router.post('/:userId/collections/:collectionId/tasks', validateUserId, validateCollectionId, validateTaskSchema, createTask);
 router.patch('/:userId/tasks/:taskId', validateTaskId, updateTask);

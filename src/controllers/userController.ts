@@ -31,6 +31,7 @@ export const createUser = async (req: Request, res: Response) => {
 				name,
 				email,
 				password: hashedPassword,
+				portrait: "",
 			},
 		});
 
@@ -47,5 +48,24 @@ export const createUser = async (req: Request, res: Response) => {
 		res
 			.status(500)
 			.json({ error: "An error occurred while creating the user." });
+	}
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+	try {
+		const { userId } = req.params;
+		const bodyData = req.body;
+
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: {
+				...bodyData,
+			},
+		});
+
+		res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+	} catch (error) {
+		console.error('Error updating user:', error);
+		res.status(500).json({ error: 'An error occurred while updating the user' });
 	}
 };
