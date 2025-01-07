@@ -41,8 +41,6 @@ model Task {
   deleted       Boolean     @default(false)
   collectionId  Int         
   collection    Collection  @relation(fields: [collectionId], references: [id])
-  // collection  String
   userId        String      @db.Uuid
   user          User        @relation(fields: [userId], references: [id])
-  // @@unique([collection, userId])
 }

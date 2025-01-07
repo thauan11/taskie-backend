@@ -5,13 +5,17 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const taskSchema = z.object({
-  title: z.string().min(1, 'Title is required.'),
-  description: z.string().min(1, 'Description is required.'),
-  collectionId: z.number().min(1, 'Collection is required.'),
-  // endAt: z.string().min(1, 'End date is required.'),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  collectionId: z.number().min(1, 'Collection is required'),
   endAt: z.string().optional(),
   completed: z.boolean().optional(),
   deleted: z.boolean().optional(),
+})
+
+const collectionSchema = z.object({
+  name: z.string().max(16, 'Colection name is too long').min(1, 'Colection name is required'), 
+  icon: z.string().min(1, 'Colection icon is required'),
 })
 
 export const validateUserId = async (
@@ -34,13 +38,34 @@ export const validateUserId = async (
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.issues });
+      const errorMessages = error.issues.map(issue => issue.message);
+      res.status(400).json({ error: errorMessages[0] });
       return
     }
 
     next(error);
   }
 }
+
+export const validateCollection = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    collectionSchema.parse(req.body);
+    
+    next();
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map(issue => issue.message);
+      res.status(400).json({ error: errorMessages[0] });
+      return
+    }
+
+    next(error);
+  }
+};
 
 export const validateCollectionId = async (
   req: Request,
@@ -62,7 +87,8 @@ export const validateCollectionId = async (
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.issues });
+      const errorMessages = error.issues.map(issue => issue.message);
+      res.status(400).json({ error: errorMessages[0] });
       return
     }
 
@@ -90,7 +116,8 @@ export const validateTaskId = async (
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.issues });
+      const errorMessages = error.issues.map(issue => issue.message);
+      res.status(400).json({ error: errorMessages[0] });
       return
     }
 
@@ -109,7 +136,8 @@ export const validateTaskSchema = (
     next();
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.issues });
+      const errorMessages = error.issues.map(issue => issue.message);
+      res.status(400).json({ error: errorMessages[0] });
       return
     }
 
