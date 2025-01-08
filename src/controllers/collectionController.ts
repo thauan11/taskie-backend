@@ -22,6 +22,25 @@ export const getCollection = async (req: Request, res: Response) => {
   }
 };
 
+export const getCollectionSpecific = async (req: Request, res: Response) => {
+  try {
+    const { collectionId } = req.params;
+
+    const collections = await prisma.collection.findMany({
+      where: { id: Number(collectionId) },
+    });
+
+    if (collections.length <= 0) {
+      res.status(204).json({ message: 'No collections found' });
+    } else {
+      res.status(200).json(collections);
+    }
+  } catch (error) {
+    console.error('Error listing collections:', error);
+    res.status(500).json({ error: 'Failed to list collections' });
+  }
+};
+
 export const createCollection = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
