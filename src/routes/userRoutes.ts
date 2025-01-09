@@ -17,7 +17,7 @@ router.get('/:userId/tasks/:taskId', validateUserId, validateTaskId, getSpecific
 router.get('/:userId/collections', validateUserId, getCollection);
 router.get('/:userId/collection/:collectionId', validateUserId, getCollectionSpecific);
 router.post('/:userId/collections', validateUserId, validateCollection, createCollection);
-router.patch('/:userId/collections/:collectionId', validateUserId, validateCollection, updateTask);
+router.patch('/:userId/collections/:collectionId', validateUserId, validateCollection, updateCollection);
 
 router.post('/:userId/collections/:collectionId/tasks', validateUserId, validateCollectionId, validateTaskSchema, createTask);
 router.patch('/:userId/tasks/:taskId', validateTaskId, updateTask);

@@ -5,8 +5,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 const collectionSchema = z.object({
-  name: z.string().max(16, 'Colection name is too long').min(1, 'Colection name is required'), 
-  icon: z.string().min(1, 'Colection icon is required'),
+  name: z.string().max(16, 'Collection name is too long').min(1, 'Collection name is required'), 
+  icon: z.string().min(1, 'Collection icon is required'),
 })
 
 export const validateCollection = async (
