@@ -24,13 +24,14 @@ model User {
 }
 
 model Collection {
-  id      Int     @id @default(autoincrement())
-  name    String 
-  icon    String 
-  deleted Boolean @default(false)
-  userId  String  @db.Uuid
-  user    User    @relation(fields: [userId], references: [id])
-  Task    Task[]
+  id        Int       @id @default(autoincrement())
+  name      String 
+  icon      String 
+  deleted   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id])
+  Task      Task[]
 }
 
 model Task {
