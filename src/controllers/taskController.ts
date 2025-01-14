@@ -104,8 +104,7 @@ export const updateTask = async (req: Request, res: Response) => {
       where: { id: taskId },
       data: {
         ...parsedData,
-        // ...(parsedData.endAt && { endAt: new Date(parsedData.endAt) }),
-        endAt: parsedData.endAt ? new Date(parsedData.endAt) : null,
+        endAt: parsedData.endAt ? new Date(parsedData.endAt) : "",
       },
     });
 
