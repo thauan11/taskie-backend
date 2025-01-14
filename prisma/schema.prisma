@@ -39,7 +39,7 @@ model Task {
   title         String
   description   String
   createdAt     DateTime    @default(now())
-  endAt         DateTime?
+  endAt         DateTime?   @db.Date
   completed     Boolean     @default(false)
   deleted       Boolean     @default(false)
   collectionId  Int         

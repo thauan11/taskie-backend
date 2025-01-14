@@ -13,13 +13,13 @@ const updateTaskSchema = z.object({
 });
 
 export const getAllTasks = async (req: Request, res: Response) => {
-  try {
-		const { userId } = req.body;
+  try { 
+    const { userId, collectionId } = req.params;
 
     const tasks = await prisma.task.findMany({
-      where: { userId },
+      where: { collectionId: Number(collectionId), userId },
     });
-
+    
     res.status(200).json(tasks);
   } catch (error) {
     console.error('Error listing tasks:', error);
@@ -104,7 +104,8 @@ export const updateTask = async (req: Request, res: Response) => {
       where: { id: taskId },
       data: {
         ...parsedData,
-        ...(parsedData.endAt && { endAt: new Date(parsedData.endAt) }),
+        // ...(parsedData.endAt && { endAt: new Date(parsedData.endAt) }),
+        endAt: parsedData.endAt ? new Date(parsedData.endAt) : null,
       },
     });
 

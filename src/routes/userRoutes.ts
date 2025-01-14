@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', getUser);
 router.patch('/:userId', validateUser, updateUser);
 
-router.get('/tasks', getAllTasks);
+router.get('/:userId/collections/:collectionId/tasks', validateUserId, validateCollectionId, getAllTasks);
 router.get('/:userId/tasks', validateUserId, getUserTasks);
 router.get('/:userId/tasks/:taskId', validateUserId, validateTaskId, getSpecificTask);
 
@@ -19,7 +19,7 @@ router.get('/:userId/collection/:collectionId', validateUserId, getCollectionSpe
 router.post('/:userId/collections', validateUserId, validateCollection, createCollection);
 router.patch('/:userId/collections/:collectionId', validateUserId, validateCollection, updateCollection);
 
-router.post('/:userId/collections/:collectionId/tasks', validateUserId, validateCollectionId, validateTaskSchema, createTask);
-router.patch('/:userId/tasks/:taskId', validateTaskId, updateTask);
+router.post('/:userId/collections/:collectionId/tasks', validateUserId, validateCollectionId, validateTaskSchema,createTask);
+router.patch('/:userId/tasks/:taskId', validateUserId, validateTaskId, updateTask);
 
 export default router;

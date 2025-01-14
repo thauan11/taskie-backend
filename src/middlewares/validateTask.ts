@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
-  collectionId: z.number().min(1, 'Collection is required'),
   endAt: z.string().optional(),
   completed: z.boolean().optional(),
   deleted: z.boolean().optional(),
