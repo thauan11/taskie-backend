@@ -85,3 +85,26 @@ export const updateCollection = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred while updating the collection' });
   }
 };
+
+export const deleteCollection = async (req: Request, res: Response) => {
+  try {
+    const { userId, collectionId } = req.params;
+
+    const tasks = await prisma.task.findMany({
+      where: { collectionId: Number(collectionId), userId },
+    });
+    
+    for (const task of tasks) {
+      await prisma.task.delete({ where: { id: task.id } });
+    }
+
+    const deleteCollection = await prisma.collection.delete({
+      where: { id: Number(collectionId) }
+    });
+
+    res.status(200).json({ message: 'Collection deleted successfully', collection: deleteCollection });
+  } catch (error) {
+    console.error('Error deleted collection:', error);
+    res.status(500).json({ error: 'An error occurred while deleted the collection' });
+  }
+};

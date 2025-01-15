@@ -104,7 +104,7 @@ export const updateTask = async (req: Request, res: Response) => {
       where: { id: taskId },
       data: {
         ...parsedData,
-        endAt: parsedData.endAt ? new Date(parsedData.endAt) : "",
+        ...(parsedData.endAt && { endAt: parsedData.endAt ? new Date(parsedData.endAt) : "" }),
       },
     });
 
@@ -112,5 +112,20 @@ export const updateTask = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error updating task:', error);
     res.status(500).json({ error: 'An error occurred while updating the task.' });
+  }
+};
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const { taskId } = req.params;
+
+    const deleteTask = await prisma.task.delete({
+      where: { id: taskId },
+    });
+
+    res.status(200).json({ message: 'Task deleted successfully', task: deleteTask });
+  } catch (error) {
+    console.error('Error deleted task:', error);
+    res.status(500).json({ error: 'An error occurred while deleted the task.' });
   }
 };
