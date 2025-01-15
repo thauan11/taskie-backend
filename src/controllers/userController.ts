@@ -20,6 +20,25 @@ export const getUser = async (req: Request, res: Response) => {
 	}
 };
 
+export const getUserSpecific = async (req: Request, res: Response) => {
+	try {
+    const { userId } = req.params;
+
+		const user = await prisma.user.findMany({
+			where: { id: userId },
+		});
+
+		if (user.length <= 0) {
+			res.status(204).json({ message: 'No user found' });
+		} else {
+			res.status(200).json(user);
+		}
+	} catch (error) {
+		console.error('Error listing user data:', error);
+		res.status(500).json({ error: 'Failed to list user data' });
+	}
+};
+
 export const createUser = async (req: Request, res: Response) => {
 	try {
 		const { name, email, password } = req.body;
@@ -32,6 +51,7 @@ export const createUser = async (req: Request, res: Response) => {
 				email,
 				password: hashedPassword,
 				portrait: "",
+				roleName: "user",
 			},
 		});
 
@@ -67,5 +87,24 @@ export const updateUser = async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error('Error updating user:', error);
 		res.status(500).json({ error: 'An error occurred while updating the user' });
+	}
+};
+
+export const updateUserPortrait = async (req: Request, res: Response) => {
+	try {
+		const { userId } = req.params;
+		const { portrait } = req.body;
+
+		const updatedUser = await prisma.user.update({
+			where: { id: userId },
+			data: {
+				portrait,
+			},
+		});
+
+		res.status(200).json({ message: 'User portrait updated successfully', user: updatedUser });
+	} catch (error) {
+		console.error('Error updating user portrait:', error);
+		res.status(500).json({ error: 'An error occurred while updating the user portrait' });
 	}
 };

@@ -9,6 +9,7 @@ interface JWTPayload {
   id: string;
   email: string;
   name: string;
+  portrait: string;
 }
 
 export const loginUser = async (req: Request, res: Response) => {

@@ -7,6 +7,8 @@ import { authenticateToken } from './middlewares/authenticateToken';
 import cookieParser from 'cookie-parser';
 
 const app = express();
+app.use(express.json({limit: '5mb'}));
+// app.use(express.urlencoded({limit: '5mb'}));
 
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
