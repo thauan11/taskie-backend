@@ -99,16 +99,17 @@ export const updateTask = async (req: Request, res: Response) => {
     const { taskId } = req.params;
 
     const parsedData = updateTaskSchema.parse(req.body);
-
+    
     const updatedTask = await prisma.task.update({
       where: { id: taskId },
       data: {
         ...parsedData,
-        ...(parsedData.endAt && { endAt: parsedData.endAt ? new Date(parsedData.endAt) : "" }),
+        ...(parsedData.endAt === "" ? { endAt: null } : parsedData.endAt && { endAt: new Date(parsedData.endAt) }),
       },
     });
 
     res.status(200).json({ message: 'Task updated successfully', task: updatedTask });
+
   } catch (error) {
     console.error('Error updating task:', error);
     res.status(500).json({ error: 'An error occurred while updating the task.' });
