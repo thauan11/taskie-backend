@@ -9,28 +9,36 @@ interface JWTPayload {
   id: string;
   email: string;
   name: string;
-  portrait: string;
+  roleName: string;
 }
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password, rememberMe } = req.body;
+  
+  const user = await prisma.user.findUnique({ 
+    where: { email },
+    include: { role: true }
+  });
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    res.status(404).json({ error: 'User not found' });
+    return
+  }
 
-	if (!user) {
-		res.status(404).json({ error: 'User not found' });
-		return
-	}
-
-	const isPasswordValid = await bcrypt.compare(password, user.password);
-	if (!isPasswordValid) {
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
     res.status(401).json({ error: 'Invalid credentials' });
-		return
-	}
-	
+    return
+  }
+ 
   const expiresIn = rememberMe ? '30d' : '1d';
   const token = jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
+    { 
+      id: user.id, 
+      email: user.email, 
+      name: user.name,
+      roleName: user.role.name,
+    },
     process.env.JWT_SECRET as string,
     { expiresIn }
   );
@@ -55,8 +63,8 @@ export const tokenValidation = (req: Request, res: Response) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JWTPayload;
-    const { id, email, name } = decoded;
-    res.status(200).json({ user: { id, email, name } });
+    const { id, email, name, roleName } = decoded;
+    res.status(200).json({ user: { id, email, name, roleName } });
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
   }

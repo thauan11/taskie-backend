@@ -1,9 +1,12 @@
-import type { JwtPayload } from 'jsonwebtoken';
+export interface DecodedToken {
+  id: string;
+  email: string;
+  roleName: string;
+}
 
-declare global {
-  namespace Express {
-    export interface Request {
-      user?: string | JwtPayload;
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: DecodedToken;
+    resourceUserId?: string;
   }
 }
