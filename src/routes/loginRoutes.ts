@@ -1,9 +1,23 @@
-import { Router } from 'express';
-import { tokenValidation, loginUser } from '../controllers/loginController';
+import { Router } from 'express'
+import {
+  tokenValidation,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+} from '../controllers/loginController'
+import { createUser } from '../controllers/userController'
+import { validateUser } from '../middlewares/validateUser'
 
-const router = Router();
+const router = Router()
 
-router.post('/', loginUser);
-router.get('/auth-token', tokenValidation);
+// login
+router.post('/login', loginUser)
+// token validation
+router.get('/auth-token', tokenValidation)
+// register
+router.post('/register', validateUser, createUser)
+// pass recovery
+router.post('/forgot-password', forgotPassword)
+router.patch('/reset-password', resetPassword)
 
-export default router;
+export default router
