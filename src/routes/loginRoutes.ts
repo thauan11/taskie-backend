@@ -4,6 +4,7 @@ import {
   loginUser,
   forgotPassword,
   resetPassword,
+  resetTokenValidation,
 } from '../controllers/loginController'
 import { createUser } from '../controllers/userController'
 import { validateUser } from '../middlewares/validateUser'
@@ -18,6 +19,7 @@ router.get('/auth-token', tokenValidation)
 router.post('/register', validateUser, createUser)
 // pass recovery
 router.post('/forgot-password', forgotPassword)
-router.patch('/reset-password', resetPassword)
+router.get('/reset-password-validation/:token', resetTokenValidation)
+router.patch('/reset-password/:token', resetPassword)
 
 export default router
