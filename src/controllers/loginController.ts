@@ -48,7 +48,6 @@ export const loginUser = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENVIRONMENT === 'prod',
     sameSite: 'none',
-    domain: process.env.CLIENT_URL,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
