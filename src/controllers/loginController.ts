@@ -46,7 +46,8 @@ export const loginUser = async (req: Request, res: Response) => {
 
   res.cookie('authToken', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENVIRONMENT === 'prod',
+    secure: true,
+    sameSite: 'none',
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
