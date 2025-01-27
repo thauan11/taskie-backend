@@ -1,10 +1,16 @@
-import type { Request, Response } from 'express'
+import type { Request, Response, CookieOptions } from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const sgMail = require('@sendgrid/mail')
 
 const prisma = new PrismaClient()
+
+declare module 'express' {
+  export interface CookieOptions {
+    partitioned?: boolean
+  }
+}
 
 interface JWTPayload {
   id: string
@@ -48,6 +54,7 @@ export const loginUser = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
+    partitioned: true,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
@@ -75,7 +82,7 @@ export const tokenValidation = (req: Request, res: Response) => {
 }
 
 export const resetTokenValidation = (req: Request, res: Response) => {
-  const { token } = req.params;
+  const { token } = req.params
 
   if (!token) {
     res.status(401).json({ message: 'Token not provided' })
@@ -83,10 +90,12 @@ export const resetTokenValidation = (req: Request, res: Response) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: string
+    }
 
     if (!decoded || !decoded.id) {
-      res.status(400).json({ error: 'Invalid or expired token' });
+      res.status(400).json({ error: 'Invalid or expired token' })
       return
     }
 
@@ -99,16 +108,16 @@ export const resetTokenValidation = (req: Request, res: Response) => {
 export const forgotPassword = async (req: Request, res: Response) => {
   const { email } = req.body
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({ where: { email } })
 
   if (!user) {
-    res.status(404).json({ error: 'User not found' });
+    res.status(404).json({ error: 'User not found' })
     return
   }
 
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
     expiresIn: '5m',
-  });
+  })
 
   // sendgrid
   const sendgridKey = sgMail.setApiKey(process.env.SENDGRID_API_KEY as string)
@@ -159,48 +168,54 @@ export const forgotPassword = async (req: Request, res: Response) => {
       </body>
       </html>
     `,
-  };
+  }
 
   try {
-    await sgMail.send(mail);
-    res.status(200).json({ message: 'Reset link sent to your email' });
+    await sgMail.send(mail)
+    res.status(200).json({ message: 'Reset link sent to your email' })
   } catch (error) {
-    console.error('SendGrid Error:', error);
-    res.status(500).json({ error: 'Failed to send email' });
+    console.error('SendGrid Error:', error)
+    res.status(500).json({ error: 'Failed to send email' })
   }
-};
+}
 
 export const resetPassword = async (req: Request, res: Response) => {
-  const { token } = req.params;
-  const { password } = req.body;
+  const { token } = req.params
+  const { password } = req.body
 
   if (!token) {
-    res.status(400).json({ error: 'Token not provided' });
+    res.status(400).json({ error: 'Token not provided' })
     return
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: string
+    }
 
     if (!decoded || !decoded.id) {
-      res.status(400).json({ error: 'Invalid or expired token' });
+      res.status(400).json({ error: 'Invalid or expired token' })
       return
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     await prisma.user.update({
       where: { id: decoded.id },
       data: { password: hashedPassword },
-    });
+    })
 
-    res.status(200).json({ message: 'Password updated successfully' });
+    res.status(200).json({ message: 'Password updated successfully' })
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      res.status(401).json({ error: 'Token has expired. Please request a new password reset.' });
+      res
+        .status(401)
+        .json({
+          error: 'Token has expired. Please request a new password reset.',
+        })
       return
     }
-    console.error('Error resetting password:', error);
-    res.status(500).json({ error: 'Failed to reset password' });
+    console.error('Error resetting password:', error)
+    res.status(500).json({ error: 'Failed to reset password' })
   }
-};
+}
