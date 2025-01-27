@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 const sgMail = require('@sendgrid/mail')
 
+import express from 'express'
+import cookieParser from 'cookie-parser'
+
 const prisma = new PrismaClient()
 
 declare module 'express' {
@@ -11,6 +14,9 @@ declare module 'express' {
     partitioned?: boolean
   }
 }
+
+const app = express()
+app.use(cookieParser())
 
 interface JWTPayload {
   id: string
@@ -55,7 +61,7 @@ export const loginUser = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: true,
     sameSite: 'none',
-    partitioned: true,
+    // partitioned: true,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 

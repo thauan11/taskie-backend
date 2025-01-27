@@ -21,7 +21,7 @@ app.use(
 
 app.options('*', cors())
 app.use(express.json())
-app.use(cookieParser())
+// app.use(cookieParser())
 
 app.use('/users', authenticateToken, userRoutes)
 app.use('/auth', loginRoutes)
