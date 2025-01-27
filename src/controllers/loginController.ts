@@ -52,11 +52,11 @@ export const loginUser = async (req: Request, res: Response) => {
   )
 
   res.cookie('authToken', token, {
-    httpOnly: true,
+    // httpOnly: true,
+    httpOnly: false,
     secure: true,
-    // sameSite: 'none',
-    sameSite: 'strict',
-    partitioned: true,
+    sameSite: 'none',
+    // partitioned: true,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
