@@ -20,6 +20,7 @@ interface JWTPayload {
 }
 
 export const loginUser = async (req: Request, res: Response) => {
+  console.log('init loginUser')
   const { email, password, rememberMe } = req.body
 
   const user = await prisma.user.findUnique({
@@ -62,6 +63,7 @@ export const loginUser = async (req: Request, res: Response) => {
 }
 
 export const tokenValidation = (req: Request, res: Response) => {
+  console.log('init tokenValidation')
   const token = req.cookies.authToken
 
   if (!token) {
@@ -82,6 +84,7 @@ export const tokenValidation = (req: Request, res: Response) => {
 }
 
 export const resetTokenValidation = (req: Request, res: Response) => {
+  console.log('init resetTokenValidation')
   const { token } = req.params
 
   if (!token) {
@@ -106,6 +109,7 @@ export const resetTokenValidation = (req: Request, res: Response) => {
 }
 
 export const forgotPassword = async (req: Request, res: Response) => {
+  console.log('init forgotPassword')
   const { email } = req.body
 
   const user = await prisma.user.findUnique({ where: { email } })
@@ -180,6 +184,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 }
 
 export const resetPassword = async (req: Request, res: Response) => {
+  console.log('init resetPassword')
   const { token } = req.params
   const { password } = req.body
 
@@ -208,11 +213,9 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'Password updated successfully' })
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      res
-        .status(401)
-        .json({
-          error: 'Token has expired. Please request a new password reset.',
-        })
+      res.status(401).json({
+        error: 'Token has expired. Please request a new password reset.',
+      })
       return
     }
     console.error('Error resetting password:', error)
