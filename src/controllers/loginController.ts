@@ -51,14 +51,21 @@ export const loginUser = async (req: Request, res: Response) => {
     { expiresIn }
   )
 
+  // res.cookie('authToken', token, {
+  //   // httpOnly: true,
+  //   httpOnly: false,
+  //   secure: true,
+  //   sameSite: 'none',
+  //   // partitioned: true,
+  //   maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+  // })
+
   res.cookie('authToken', token, {
-    // httpOnly: true,
-    httpOnly: false,
-    secure: true,
+    httpOnly: true,
+    secure: process.env.NODE_ENVIRONMENT === 'prod',
     sameSite: 'none',
-    // partitioned: true,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
-  })
+  });
 
   res.status(200).json({ message: 'Login successful' })
 }
