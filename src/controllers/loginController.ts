@@ -51,13 +51,13 @@ export const loginUser = async (req: Request, res: Response) => {
     { expiresIn }
   )
 
-  console.log('CLIENT_ROOT_URL', process.env.CLIENT_ROOT_URL)
-  console.log('CLIENT_ROOT_URL as string', process.env.CLIENT_ROOT_URL as string)
+  // console.log('CLIENT_ROOT_URL', process.env.CLIENT_ROOT_URL)
+  // console.log('CLIENT_ROOT_URL as string', process.env.CLIENT_ROOT_URL as string)
   res.cookie('authToken', token, {
     httpOnly: true,
     secure: process.env.NODE_ENVIRONMENT !== 'dev' || true,
     sameSite: 'none',
-    domain: process.env.CLIENT_ROOT_URL as string,
+    // domain: process.env.CLIENT_ROOT_URL as string,
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
