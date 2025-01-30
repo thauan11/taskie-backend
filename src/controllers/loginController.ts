@@ -1,4 +1,4 @@
-import type { Request, Response, CookieOptions } from 'express'
+import type { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -51,13 +51,17 @@ export const loginUser = async (req: Request, res: Response) => {
     { expiresIn }
   )
 
-  res.cookie('authToken', token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
-    maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
-  })
+  // res.cookie('authToken', token, {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: 'none',
+  //   path: '/',
+  //   maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+  // })
+  res.writeHead(200, {
+    "Set-Cookie": `authToken=${token}; HttpOnly`,
+    "Access-Control-Allow-Credentials": "true"
+  }).send();
 
   res.status(200).json({ message: 'Login successful' })
 }
