@@ -51,19 +51,15 @@ export const loginUser = async (req: Request, res: Response) => {
     { expiresIn }
   )
 
-  // res.cookie('authToken', token, {
-  //   httpOnly: true,
-  //   secure: true,
-  //   sameSite: 'none',
-  //   path: '/',
-  //   maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
-  // })
-  res.writeHead(200, {
-    "Set-Cookie": `authToken=${token}; HttpOnly`,
-    "Access-Control-Allow-Credentials": "true"
-  }).send();
+  res.cookie('authToken', token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    path: '/',
+    maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+  })
 
-  res.status(200).json({ message: 'Login successful' })
+  res.status(200).json({ message: 'Login successful', authToken: token })
 }
 
 export const tokenValidation = (req: Request, res: Response) => {
