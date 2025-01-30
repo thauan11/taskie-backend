@@ -59,7 +59,7 @@ export const loginUser = async (req: Request, res: Response) => {
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
-  res.status(200).json({ message: 'Login successful', authToken: token })
+  res.status(200).json({ message: 'Login successful' })
 }
 
 export const tokenValidation = (req: Request, res: Response) => {
