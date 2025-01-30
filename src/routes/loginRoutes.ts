@@ -14,7 +14,7 @@ const router = Router()
 // login
 router.post('/login', loginUser)
 // token validation
-router.get('/auth-token', tokenValidation)
+router.post('/auth-token', tokenValidation)
 // register
 router.post('/register', validateUser, createUser)
 // pass recovery
