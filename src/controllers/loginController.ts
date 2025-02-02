@@ -48,10 +48,23 @@ export const loginUser = async (req: Request, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENVIRONMENT === 'prod',
     sameSite: process.env.NODE_ENVIRONMENT === 'prod' ? 'none' : 'strict',
+    path: '/',
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
-  res.status(200).json({ message: 'Login successful' })
+  console.log('Cookie enviado:', {
+    name: 'authToken',
+    value: token,
+    options: {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
+    },
+  })
+
+  res.status(200).json({ message: 'Login successful', token: token })
 }
 
 export const tokenValidation = (req: Request, res: Response) => {
