@@ -6,12 +6,6 @@ const sgMail = require('@sendgrid/mail')
 
 const prisma = new PrismaClient()
 
-declare module 'express' {
-  export interface CookieOptions {
-    partitioned?: boolean
-  }
-}
-
 interface JWTPayload {
   id: string
   email: string
@@ -20,7 +14,6 @@ interface JWTPayload {
 }
 
 export const loginUser = async (req: Request, res: Response) => {
-  console.log('init loginUser')
   const { email, password, rememberMe } = req.body
 
   const user = await prisma.user.findUnique({
@@ -52,10 +45,9 @@ export const loginUser = async (req: Request, res: Response) => {
   )
 
   res.cookie('authToken', token, {
-    httpOnly: false,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENVIRONMENT === 'prod',
+    sameSite: process.env.NODE_ENVIRONMENT === 'prod' ? 'none' : 'strict',
     maxAge: rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
   })
 
@@ -63,7 +55,6 @@ export const loginUser = async (req: Request, res: Response) => {
 }
 
 export const tokenValidation = (req: Request, res: Response) => {
-  console.log('init tokenValidation')
   const token = req.cookies.authToken
 
   if (!token) {
@@ -84,7 +75,6 @@ export const tokenValidation = (req: Request, res: Response) => {
 }
 
 export const resetTokenValidation = (req: Request, res: Response) => {
-  console.log('init resetTokenValidation')
   const { token } = req.params
 
   if (!token) {
@@ -109,7 +99,6 @@ export const resetTokenValidation = (req: Request, res: Response) => {
 }
 
 export const forgotPassword = async (req: Request, res: Response) => {
-  console.log('init forgotPassword')
   const { email } = req.body
 
   const user = await prisma.user.findUnique({ where: { email } })
@@ -184,7 +173,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
 }
 
 export const resetPassword = async (req: Request, res: Response) => {
-  console.log('init resetPassword')
   const { token } = req.params
   const { password } = req.body
 

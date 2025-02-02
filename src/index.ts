@@ -7,26 +7,23 @@ import { authenticateToken } from './middlewares/authenticateToken'
 import cookieParser from 'cookie-parser'
 
 const app = express()
-app.use(express.json({ limit: '5mb' }))
-// app.use(express.urlencoded({limit: '5mb'}));
 
 app.use(cookieParser())
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
     credentials: true,
   })
 )
 
-app.options('*', cors())
-app.use(express.json())
+app.use(express.json({ limit: '5mb' }))
 
 app.use('/users', authenticateToken, userRoutes)
 app.use('/auth', loginRoutes)
-// app.use('/sing-in', loginRoutes);
-// app.use('/sing-up', registerRoutes);
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () =>
