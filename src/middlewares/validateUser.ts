@@ -11,8 +11,8 @@ const passwordSchema = z.string()
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email format'),
-  // password: passwordSchema,
-  password: z.string().min(1, 'Password is required'),
+  password: passwordSchema,
+  // password: z.string().min(1, 'Password is required'),
 })
 
 export const validateUser = (
