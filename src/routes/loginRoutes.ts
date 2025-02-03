@@ -13,7 +13,7 @@ import { validateUser } from '../middlewares/validateUser'
 const router = Router()
 
 // ping (mantem render ativo)
-router.post('/ping', ping)
+router.get('/ping', ping)
 // login
 router.post('/login', loginUser)
 // token validation
