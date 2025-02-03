@@ -5,12 +5,15 @@ import {
   forgotPassword,
   resetPassword,
   resetTokenValidation,
+  ping,
 } from '../controllers/loginController'
 import { createUser } from '../controllers/userController'
 import { validateUser } from '../middlewares/validateUser'
 
 const router = Router()
 
+// ping (mantem render ativo)
+router.post('/ping', ping)
 // login
 router.post('/login', loginUser)
 // token validation

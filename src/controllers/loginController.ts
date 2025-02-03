@@ -13,6 +13,11 @@ interface JWTPayload {
   roleName: string
 }
 
+export const ping = async (req: Request, res: Response) => {
+  console.log('ping')
+  res.status(200).json({ message: 'Ping successful' })
+}
+
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password, rememberMe } = req.body
 
